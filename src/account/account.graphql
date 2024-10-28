@@ -1,0 +1,89 @@
+type Account {
+  id: Int!
+  phone: String!
+  email: String
+  is_verified: Boolean
+  firstname: String
+  lastname: String
+  is_customer: Boolean
+  is_superadmin: Boolean
+  is_agent: Boolean
+  account_created: String  
+}
+
+input CreateAccountInput {
+  phone: String!
+  otp: String!
+  password: String!
+}
+
+input UpdateAccountInput {
+  id: Int!
+  firstname: String
+  lastname: String
+}
+
+input sendOtpInput {
+  phone:String!
+}
+
+type sendOtpResponse {
+  success:Boolean!
+  message:String!
+}
+
+type createAccountResponse {
+  success: Boolean!
+  message: String!
+  account: Account
+  
+}
+
+input verifyOtpInput {
+  message:String!
+}
+type verifyOtpResponse {
+  success:Boolean!
+  message:String!
+}
+type accountsResponse {
+  success:Boolean!
+  message:String!
+  accounts:[Account]!
+}
+
+type accountResponse {
+  success: Boolean!
+  message: String!
+  account: Account
+}
+
+type params {
+  skip:Int!
+  take:Int!
+}
+
+type removeAccountResponse {
+  success:Boolean!
+  message:String!
+}
+
+type UpdateAccountResponse {
+  success:Boolean!
+  message:String!
+  account:Account
+}
+
+type Query {
+  accounts(input:params!): accountsResponse
+  account(id: Int!): accountResponse
+}
+
+type Mutation {
+  sendOtp(sendOtpInput:sendOtpInput!):sendOtpResponse!
+  verifyOtp(verifyOtpInput:verifyOtpInput!):verifyOtpResponse!
+
+  createAccount(createAccountInput: CreateAccountInput!): createAccountResponse!
+  updateAccount(updateAccountInput: UpdateAccountInput!): UpdateAccountResponse!
+  removeAccountAsSuperadmin(id: Int!): removeAccountResponse!
+}

@@ -1,0 +1,24 @@
+type Property {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreatePropertyInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdatePropertyInput {
+  id: Int!
+}
+
+type Query {
+  properties: [Property]!
+  property(id: Int!): Property
+}
+
+type Mutation {
+  createProperty(createPropertyInput: CreatePropertyInput!): Property!
+  updateProperty(updatePropertyInput: UpdatePropertyInput!): Property!
+  removeProperty(id: Int!): Property
+}

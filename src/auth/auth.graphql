@@ -1,0 +1,29 @@
+
+input authenticateInput {
+  method:String!
+  identifier:String!
+  password:String!
+}
+
+type authenticateResponse {
+  success:Boolean!
+  message:String!
+  accessToken:String
+  refreshToken:String
+}
+
+type regenerateAccessTokenInput {
+  refreshToken:String!
+}
+type regenerateAccessTokenResponse {
+  success:Boolean!
+  message:String!
+  accessToken:String
+  refreshToken:String
+}
+
+
+type Mutation {
+  authenticate(authenticateInput: authenticateInput!): authenticateResponse!
+  regenerateAccessToken(regenerateAccessTokenInput:regenerateAccessTokenInput!):regenerateAccessTokenResponse!
+}
