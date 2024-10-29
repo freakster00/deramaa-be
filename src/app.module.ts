@@ -9,6 +9,7 @@ import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { AgentVerificationModule } from './agent-verification/agent-verification.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       introspection:true,
       path: '/api'
     }),
+    AgentVerificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

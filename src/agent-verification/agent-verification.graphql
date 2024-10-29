@@ -1,0 +1,42 @@
+type AgentVerification {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+type AgentVerificationRequest {
+  requestId: ID!
+  phone: String!
+  email: String!
+  firstname: String!
+  lastname: String!
+  citizenshipimagefront: String!
+  citizenshipimageback: String!
+  request_created: String!
+}
+input createAgentVerificationRequestInput {
+  phone: String!
+  email: String!
+  firstname: String!
+  lastname: String!
+  citizenshipimagefront: String!
+  citizenshipimageback: String!
+}
+
+
+
+
+input UpdateAgentVerificationInput {
+  id: Int!
+}
+
+type Query {
+  agentVerification: [AgentVerification]!
+  agentVerification(id: Int!): AgentVerification
+}
+
+type Mutation {
+  createAgentVerificationRequest(createAgentVerificationInput: createAgentVerificationRequestInput!): AgentVerification!
+  
+  updateAgentVerification(updateAgentVerificationInput: UpdateAgentVerificationInput!): AgentVerification!
+  removeAgentVerification(id: Int!): AgentVerification
+}
