@@ -12,7 +12,7 @@ type authenticateResponse {
   refreshToken:String
 }
 
-type regenerateAccessTokenInput {
+input regenerateAccessTokenInput {
   refreshToken:String!
 }
 type regenerateAccessTokenResponse {

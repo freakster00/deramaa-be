@@ -40,7 +40,7 @@ import { AgentVerificationModule } from './agent-verification/agent-verification
       introspection:true,
       path: '/api'
     }),
-    AgentVerificationModule,
+   AgentVerificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

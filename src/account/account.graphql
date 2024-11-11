@@ -58,7 +58,7 @@ type accountResponse {
   account: Account
 }
 
-type params {
+input params {
   skip:Int!
   take:Int!
 }

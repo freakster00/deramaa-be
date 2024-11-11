@@ -7,29 +7,31 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class AgentVerificationService {
-
   constructor(
     @InjectRepository(AgentVerification)
-    private readonly agentVerification: Repository<AgentVerification>,
+    private readonly agentVerificationRepository: Repository<AgentVerification>,
+  ) {}
 
-  ){}
-  create(createAgentVerificationInput: CreateAgentVerificationInput) {
-    return 'This action adds a new agentVerification';
+  async create(createAgentVerificationInput: CreateAgentVerificationInput): Promise<AgentVerification> {
+    const newAgentVerification = this.agentVerificationRepository.create(createAgentVerificationInput);
+    return await this.agentVerificationRepository.save(newAgentVerification);
   }
 
-  findAll() {
-    return `This action returns all agentVerification`;
+  async findAll(): Promise<AgentVerification[]> {
+    return await this.agentVerificationRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} agentVerification`;
+  async findOne(id: number): Promise<AgentVerification> {
+    return await this.agentVerificationRepository.findOne({ where: { requestId: id } });
   }
 
-  update(id: number, updateAgentVerificationInput: UpdateAgentVerificationInput) {
-    return `This action updates a #${id} agentVerification`;
+  async update(id: number, updateAgentVerificationInput: UpdateAgentVerificationInput): Promise<AgentVerification> {
+    return await this.agentVerificationRepository.findOne({ where: { requestId: id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} agentVerification`;
+  async remove(id: number): Promise<AgentVerification> {
+    const agentVerification = await this.findOne(id);
+    await this.agentVerificationRepository.delete(id);
+    return agentVerification;
   }
 }

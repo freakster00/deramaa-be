@@ -1,6 +1,12 @@
 type AgentVerification {
-  # Example field (placeholder)
-  exampleField: Int
+  requestId: ID!
+  phone: String!
+  email: String!
+  firstname: String!
+  lastname: String!
+  citizenshipimagefront: String!
+  citizenshipimageback: String!
+  request_created: String!
 }
 
 type AgentVerificationRequest {
@@ -29,14 +35,10 @@ input UpdateAgentVerificationInput {
   id: Int!
 }
 
-type Query {
-  agentVerification: [AgentVerification]!
-  agentVerification(id: Int!): AgentVerification
-}
+
 
 type Mutation {
-  createAgentVerificationRequest(createAgentVerificationInput: createAgentVerificationRequestInput!): AgentVerification!
-  
+  createAgentVerification(createAgentVerificationInput: createAgentVerificationRequestInput!): AgentVerification!
   updateAgentVerification(updateAgentVerificationInput: UpdateAgentVerificationInput!): AgentVerification!
   removeAgentVerification(id: Int!): AgentVerification
 }

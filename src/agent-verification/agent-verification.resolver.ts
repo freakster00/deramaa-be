@@ -12,16 +12,6 @@ export class AgentVerificationResolver {
     return this.agentVerificationService.create(createAgentVerificationInput);
   }
 
-  @Query('agentVerification')
-  findAll() {
-    return this.agentVerificationService.findAll();
-  }
-
-  @Query('agentVerification')
-  findOne(@Args('id') id: number) {
-    return this.agentVerificationService.findOne(id);
-  }
-
   @Mutation('updateAgentVerification')
   update(@Args('updateAgentVerificationInput') updateAgentVerificationInput: UpdateAgentVerificationInput) {
     return this.agentVerificationService.update(updateAgentVerificationInput.id, updateAgentVerificationInput);
