@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Property } from 'src/property/entities/property.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Account {
@@ -34,4 +35,7 @@ export class Account {
 
   @CreateDateColumn({ type: 'timestamp' })
   account_created: Date;
+
+  @OneToMany(() => Property, (property) => property.agent)
+  properties: Property[];
 }
