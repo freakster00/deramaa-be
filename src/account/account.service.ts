@@ -283,6 +283,10 @@ export class AccountService {
       };
     }
   }
+/*   async resetpassword(resetpasswordInput: any) {
+
+  } */
+
   async removeAccountAsSuperadmin(id: number) {
     try{
       const removeResp=await this.accountRepository.softDelete(id)
