@@ -8,19 +8,33 @@ type Account {
   is_customer: Boolean
   is_superadmin: Boolean
   is_agent: Boolean
+<<<<<<< HEAD
   account_created: String  
+=======
+  account_created: String
+>>>>>>> b291196 (Basic Account CRUD)
 }
 
 input CreateAccountInput {
   phone: String!
   otp: String!
   password: String!
+<<<<<<< HEAD
+=======
+  email: String
+  firstname: String
+  lastname: String
+  is_customer: Boolean
+  is_superadmin: Boolean
+  is_agent: Boolean
+>>>>>>> b291196 (Basic Account CRUD)
 }
 
 input UpdateAccountInput {
   id: Int!
   firstname: String
   lastname: String
+<<<<<<< HEAD
 }
 
 input sendOtpInput {
@@ -30,12 +44,26 @@ input sendOtpInput {
 type sendOtpResponse {
   success:Boolean!
   message:String!
+=======
+  email: String
+  phone: String
+}
+
+input sendOtpInput {
+  phone: String!
+}
+
+type sendOtpResponse {
+  success: Boolean!
+  message: String!
+>>>>>>> b291196 (Basic Account CRUD)
 }
 
 type createAccountResponse {
   success: Boolean!
   message: String!
   account: Account
+<<<<<<< HEAD
   
 }
 
@@ -50,6 +78,21 @@ type accountsResponse {
   success:Boolean!
   message:String!
   accounts:[Account]!
+=======
+}
+
+input verifyOtpInput {
+  message: String!
+}
+type verifyOtpResponse {
+  success: Boolean!
+  message: String!
+}
+type accountsResponse {
+  success: Boolean!
+  message: String!
+  accounts: [Account]!
+>>>>>>> b291196 (Basic Account CRUD)
 }
 
 type accountResponse {
@@ -59,6 +102,7 @@ type accountResponse {
 }
 
 input params {
+<<<<<<< HEAD
   skip:Int!
   take:Int!
 }
@@ -76,14 +120,46 @@ type UpdateAccountResponse {
 
 type Query {
   accounts(input:params!): accountsResponse
+=======
+  skip: Int!
+  take: Int!
+}
+type removeAccountResponse {
+  success: Boolean!
+  message: String!
+}
+
+type removeAccountResponseasSuperadmin {
+  success: Boolean!
+  message: String!
+}
+
+type UpdateAccountResponse {
+  success: Boolean!
+  message: String!
+  account: Account
+}
+
+type Query {
+  accounts(input: params!): accountsResponse
+>>>>>>> b291196 (Basic Account CRUD)
   account(id: Int!): accountResponse
 }
 
 type Mutation {
+<<<<<<< HEAD
   sendOtp(sendOtpInput:sendOtpInput!):sendOtpResponse!
   verifyOtp(verifyOtpInput:verifyOtpInput!):verifyOtpResponse!
 
   createAccount(createAccountInput: CreateAccountInput!): createAccountResponse!
   updateAccount(updateAccountInput: UpdateAccountInput!): UpdateAccountResponse!
   removeAccountAsSuperadmin(id: Int!): removeAccountResponse!
+=======
+  sendOtp(sendOtpInput: sendOtpInput!): sendOtpResponse!
+  verifyOtp(verifyOtpInput: verifyOtpInput!): verifyOtpResponse!
+  removeacaount(id: Int!): removeAccountResponse!
+  createAccount(createAccountInput: CreateAccountInput!): createAccountResponse!
+  updateAccount(updateAccountInput: UpdateAccountInput!): UpdateAccountResponse!
+  removeAccountAsSuperadmin(id: Int!): removeAccountResponseasSuperadmin!
+>>>>>>> b291196 (Basic Account CRUD)
 }

@@ -31,6 +31,10 @@ export class AccountService {
       try{
         if(createAccountInput.password.length>=8){
           const db_resp=await this.accountRepository.save({
+          const db_resp = await this.accountRepository.save({
+            email:createAccountInput.email,
+            firstname:createAccountInput.firstname,
+            lastname:createAccountInput.lastname,
             password:await this.authService.encrypt(createAccountInput.password),
             phone:verifyOtpInput.phone
             
@@ -226,7 +230,9 @@ export class AccountService {
           id:user.userId
       },{
         firstname:updateAccountInput.firstname,
-        lastname:updateAccountInput.lastname
+        lastname: updateAccountInput.lastname,
+        email: updateAccountInput.email,
+        phone:updateAccountInput.phone
       })
         const updatedAccountInstance=await this.accountRepository.findOne({
           where:{
@@ -256,7 +262,27 @@ export class AccountService {
       }
     }
   }
-
+  async removeaccount(id: number) {
+    try {
+      const removeResp = await this.accountRepository.softDelete(id);
+      if (removeResp.affected === 1) {
+        return {
+          success: true,
+          message: 'Account removed successfully',
+        };
+      } else {
+        return {
+          success: false,
+          message: 'Error occured removing the account',
+        };
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: `Error occured removing the account - ${e.message}`,
+      };
+    }
+  }
   async removeAccountAsSuperadmin(id: number) {
     try{
       const removeResp=await this.accountRepository.softDelete(id)
@@ -281,3 +307,4 @@ export class AccountService {
     }
   }
 }
+

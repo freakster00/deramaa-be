@@ -27,6 +27,11 @@ export class AccountResolver {
     return this.accountService.create(createAccountInput);
   }
 
+  @Mutation('removeaccount')
+  removeacaount(@Args('id') id: number) {
+    return this.accountService.removeaccount(id);
+  }
+
   @Query('accounts')
   findAll(@Args("input") input:any) {
     return this.accountService.findAll(input);

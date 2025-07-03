@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Account {
@@ -27,11 +27,17 @@ export class Account {
   is_customer: boolean;
 
   @Column({ default: false })
-  is_superdmin: boolean;
+  is_superadmin: boolean;
 
   @Column({ default: false })
   is_agent: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })
   account_created: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  account_deleted: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  account_updated: Date;
 }

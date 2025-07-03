@@ -33,7 +33,7 @@ export class AuthService {
       tokenType: "ACCESS",
       is_verified: user.is_verified,
       is_customer: user.is_customer,
-      is_superdmin: user.is_superdmin,
+      is_superdmin: user.is_superadmin,
       is_agent: user.is_agent,
     };
     return this.generateToken(payload, '3d');
