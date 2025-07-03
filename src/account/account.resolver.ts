@@ -28,7 +28,11 @@ export class AccountResolver {
   }
 
   @Mutation('removeaccount')
+<<<<<<< HEAD
   removeacaount(@Args('id') id: number) {
+=======
+  removeaccount(@Args('id') id: number) {
+>>>>>>> 18932a8 (remove account mutation)
     return this.accountService.removeaccount(id);
   }
 
