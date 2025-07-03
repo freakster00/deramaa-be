@@ -1,24 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Account } from 'src/account/entities/account.entity'; // assuming agent is an Account
-// import { PropertyImage } from './property-image.entity'; // you can define this separately
-
-export enum PropertyType {
-  APARTMENT = 'apartment',
-  HOUSE = 'house',
-  ROOM = 'room',
-  VILLA = 'villa',
-  OFFICE = 'office',
-  STUDIO = 'studio',
-  DUPLEX = 'duplex',
-  LAND = 'land',
-}
-
-export enum PropertyStatus {
-  AVAILABLE = 'available',
-  SOLD = 'sold',
-  RENTED = 'rented',
-  PENDING = 'pending',
-}
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Account } from 'src/account/entities/account.entity';
 
 @Entity()
 export class Property {
@@ -28,11 +16,8 @@ export class Property {
   @Column()
   propertyName: string;
 
-  @Column({
-    type: 'enum',
-    enum: PropertyType,
-  })
-  propertyType: PropertyType;
+  @Column({ type: 'varchar' }) // PropertyType as string
+  propertyType: string;
 
   @Column({ type: 'text', nullable: true })
   description: string;
@@ -59,10 +44,10 @@ export class Property {
   floor: number;
 
   @Column({ nullable: true })
-  furnishing: string; // e.g., Furnished, Semi-furnished, Unfurnished
+  furnishing: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  area: number; // in square feet or meters
+  area: number;
 
   @Column()
   city: string;
@@ -85,12 +70,8 @@ export class Property {
   @Column({ type: 'decimal', precision: 9, scale: 6, nullable: true })
   longitude: number;
 
-  @Column({
-    type: 'enum',
-    enum: PropertyStatus,
-    default: PropertyStatus.AVAILABLE,
-  })
-  status: PropertyStatus;
+  @Column({ type: 'varchar', default: 'available' }) // PropertyStatus as string
+  status: string;
 
   @Column({ default: true })
   isActive: boolean;
@@ -100,9 +81,6 @@ export class Property {
 
   @ManyToOne(() => Account, (account) => account.properties)
   agent: Account;
-
-//   @OneToMany(() => PropertyImage, (image) => image.property, { cascade: true })
-//   images: PropertyImage[];
 
   @CreateDateColumn()
   createdAt: Date;

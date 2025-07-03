@@ -1,34 +1,38 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { PropertyService } from './property.service';
 import { CreatePropertyInput } from './dto/create-property.input';
 import { UpdatePropertyInput } from './dto/update-property.input';
 
 @Resolver('Property')
 export class PropertyResolver {
-  constructor(private readonly propertyService: PropertyService) {}
+  constructor(private readonly service: PropertyService) { }
 
   @Mutation('createProperty')
-  create(@Args('createPropertyInput') createPropertyInput: CreatePropertyInput) {
-    return this.propertyService.create(createPropertyInput);
+  create(
+    @Args('createPropertyInput') input: CreatePropertyInput,
+  ) {
+    return this.service.create(input);
   }
 
   @Query('properties')
-  findAll() {
-    return this.propertyService.findAll();
+  findAll(@Args('options') options: { skip?: number; take?: number }) {
+    return this.service.findAll(options);
   }
 
   @Query('property')
-  findOne(@Args('id') id: number) {
-    return this.propertyService.findOne(id);
+  findOne(@Args('id', { type: () => Int }) id: number) {
+    return this.service.findOne(id);
   }
 
   @Mutation('updateProperty')
-  update(@Args('updatePropertyInput') updatePropertyInput: UpdatePropertyInput) {
-    return this.propertyService.update(updatePropertyInput.id, updatePropertyInput);
+  update(
+    @Args('updatePropertyInput') input: UpdatePropertyInput,
+  ) {
+    return this.service.update(input.id, input);
   }
 
   @Mutation('removeProperty')
-  remove(@Args('id') id: number) {
-    return this.propertyService.remove(id);
+  remove(@Args('id', { type: () => Int }) id: number) {
+    return this.service.remove(id);
   }
 }
