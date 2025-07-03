@@ -11,10 +11,15 @@ export class AuthService {
   constructor(
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
-  ) {}
+  ) { }
 
   private generateToken(payload: object, expiresIn: string): string {
-    return jwt.sign(payload, process.env.PASSWORD_ENCRYPTION_STRING, { expiresIn });
+    const secret = process.env.PASSWORD_ENCRYPTION_STRING;
+    if (!secret) {
+      throw new Error('Missing PASSWORD_ENCRYPTION_STRING in environment variables.');
+    }
+
+    return jwt.sign(payload, secret as string, { expiresIn: expiresIn as jwt.SignOptions["expiresIn"] });
   }
 
   generateAccessToken(user: Account): string {
@@ -45,13 +50,13 @@ export class AuthService {
 
   async authenticate(authenticateInput: authenticateInput) {
     const user = await this.findUserByIdentifier(authenticateInput);
-    
+
     if (!user) {
       return this.createResponse(false, "Invalid credentials", null, null);
     }
 
     const isMatch = await bcrypt.compare(authenticateInput.password, user.password);
-    
+
     if (!isMatch) {
       return this.createResponse(false, "Invalid credentials", null, null);
     }
@@ -64,9 +69,9 @@ export class AuthService {
 
   private async findUserByIdentifier(authenticateInput: authenticateInput): Promise<Account | null> {
     try {
-      return await this.accountRepository.findOne({ 
-        where: { 
-          [authenticateInput.method.toLowerCase()]: authenticateInput.identifier 
+      return await this.accountRepository.findOne({
+        where: {
+          [authenticateInput.method.toLowerCase()]: authenticateInput.identifier
         }
       });
     } catch (error) {
@@ -84,35 +89,35 @@ export class AuthService {
   }
   async encrypt(userPassword: string): Promise<string> {
     const password = userPassword
-    const saltRound=10
+    const saltRound = 10
     const hashedPassword = await bcrypt.hash(password, saltRound);
     return hashedPassword
   }
 
-  async regenerateAccessToken(regenerateAccessTokenInput:RegenerateAccessTokenInput,user:any){
-    try{
-      const jwtStatus=jwt.verify(regenerateAccessTokenInput.refreshToken,process.env.PASSWORD_ENCRYPTION_STRING)
-    if(jwtStatus){
-      const accessToken=this.generateAccessToken(user)
-      const refreshToken=await this.generateRefreshToken(user.userId)
+  async regenerateAccessToken(regenerateAccessTokenInput: RegenerateAccessTokenInput, user: any) {
+    try {
+      const jwtStatus = jwt.verify(regenerateAccessTokenInput.refreshToken, process.env.PASSWORD_ENCRYPTION_STRING)
+      if (jwtStatus) {
+        const accessToken = this.generateAccessToken(user)
+        const refreshToken = await this.generateRefreshToken(user.userId)
 
-      return {
-        success:true,
-        message:"Access token received successfully",
-        accessToken,
-        refreshToken
+        return {
+          success: true,
+          message: "Access token received successfully",
+          accessToken,
+          refreshToken
+        }
       }
     }
-    }
-    catch(e){
+    catch (e) {
       return {
-        success:false,
-        message:`Failed generating access token - ${e.message}`,
-        accessToken:null,
-        refreshToken:null
+        success: false,
+        message: `Failed generating access token - ${e.message}`,
+        accessToken: null,
+        refreshToken: null
       }
     }
-}
+  }
 
 }
 
