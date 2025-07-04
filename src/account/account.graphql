@@ -93,7 +93,7 @@ type Query {
 type Mutation {
   sendOtp(sendOtpInput: sendOtpInput!): sendOtpResponse!
   verifyOtp(verifyOtpInput: verifyOtpInput!): verifyOtpResponse!
-  removeacaount(id: Int!): removeAccountResponse!
+  removeaccount(id: Int!): removeAccountResponse!
   createAccount(createAccountInput: CreateAccountInput!): createAccountResponse!
   updateAccount(updateAccountInput: UpdateAccountInput!): UpdateAccountResponse!
   removeAccountAsSuperadmin(id: Int!): removeAccountResponseasSuperadmin!
