@@ -1,16 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable ,UnauthorizedException} from '@nestjs/common';
 import { authenticateInput, RegenerateAccessTokenInput } from './dto/create-auth.input';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account } from 'src/account/entities/account.entity';
+import { AccountService } from 'src/account/account.service'
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
+    private readonly AccountService: AccountService,
+    private readonly mailerService:MailerService
+
   ) { }
 
   private generateToken(payload: object, expiresIn: string): string {
@@ -119,5 +124,84 @@ export class AuthService {
     }
   }
 
+  async accountlogin(loginInput: any): Promise<{ success: Boolean; message: string; account: Account; accesstoken: string, refreshtoken: string }> {
+    try {
+      const phone = loginInput.phone
+      const user = await this.findUserByIdentifier(loginInput)
+      if (!user) {
+        throw new UnauthorizedException('Invalid Credentials');
+      }
+      const isMatch = await bcrypt.compare(loginInput.password, user.password);
+
+      const bcryptedpass = await this.encrypt(loginInput.password)
+      if (!(bcryptedpass === user.password)) {
+        throw new UnauthorizedException('Invalid Credentials');
+      }
+      else {
+        const access_token = this.generateAccessToken(user);
+        const refresh_token = await this.generateRefreshToken(user.id)
+        return {
+          success: true,
+          message: `Welcome ${user.firstname}`,
+          account: user,
+          accesstoken: access_token,
+          refreshtoken: refresh_token
+        }
+      }
+    
+    }
+    catch (e) {
+      return {
+        success: false,
+        message: `Error occured while loggin in`,
+        account: null,
+        accesstoken: null,
+        refreshtoken: null
+      }
+    }
+  }
+  async forgotPassword(email: string) {
+    const user = await this.accountRepository.findOneBy({
+      email: email
+    })
+    const passsecret = process.env.PASSWORD_RESET_KEY;
+    const payload = {
+      sub: email
+    }
+    const token = jwt.sign(payload, passsecret as string, { expiresIn: '10m' as jwt.SignOptions['expiresIn'] })
+  
+    const resetlink = `${process.env.FRONTEND_URL}/reset-password?toker=${token}`;
+    await this.mailerService.sendMail({
+      to: email,
+      subject: "Reset Your Password",
+      html: `
+      <p> Hello ${user.firstname}, </p>
+      <p> You requested a password reset. Click the link below to reset your password:</p>
+      <a href="${resetlink}">Reset Password</a>
+      <p>If you did not request a password reset, please ignore this email or reply to let us know.</p>
+      `,
+    });
+  }
+  
+  async resetPassword(token: string, newPassword: string):Promise<{ success: boolean; message: string }> {
+    try {
+      const payload = jwt.verify(token, process.env.PASSWORD_RESET_KEY);
+      const email = (payload.sub).toString();
+      const user = await this.accountRepository.findOne({
+        where: {
+          email: email
+        }
+      });
+      if (!user) {
+        return { success: false, message: 'User not found' };
+      }
+      const hashedPassword = await this.encrypt(newPassword);
+      user.password = hashedPassword;
+      await this.accountRepository.save(user);
+      return { success: true, message: 'Password reset successful' };
+    } catch (error) {
+      return { success: false, message: 'Invalid or expired token' };
+    }
+  }
 }
 
