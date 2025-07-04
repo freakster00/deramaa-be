@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AgentVerificationModule } from './agent-verification/agent-verification.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -40,7 +41,20 @@ import { AgentVerificationModule } from './agent-verification/agent-verification
       introspection:true,
       path: '/api'
     }),
-   AgentVerificationModule,
+    AgentVerificationModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
+        },
+      },
+      defaults: {
+        from: process.env.SMTP_FROM,
+     }
+   })
   ],
   controllers: [AppController],
   providers: [AppService],
