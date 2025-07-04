@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Injectable ,Inject} from '@nestjs/common';
 import { CreateAccountInput } from './dto/create-account.input';
 import { UpdateAccountInput } from './dto/update-account.input';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,6 +19,7 @@ export class AccountService {
     @InjectRepository(MobileOTP)
     private readonly mobileOtpRepository: Repository<MobileOTP>,
 
+    @Inject(forwardRef(()=>AuthService))
     private readonly authService: AuthService
   ){}
   async create(createAccountInput: CreateAccountInput) {
@@ -182,7 +183,37 @@ export class AccountService {
     }
    }
   }
-
+  async findOneByphone(phone: string) {
+    try {
+      const accountInstance = await this.accountRepository.findOne({
+        where: {
+          phone:phone
+        }
+      })
+      if (accountInstance != undefined) {
+        return {
+          success: true,
+          message: "Account found",
+          account: accountInstance
+        }
+      }
+      else {
+        return {
+          success: false,
+          message: "Account not found",
+          account: null
+        }
+      }
+    }
+    catch (e) {
+      return {
+        success: false,
+        message: `Account not found - ${e.message}`,
+        account: null
+      }
+    }
+  }
+     
   async findOne(id: number) {
    try{
       const accountInstance=await this.accountRepository.findOne({
