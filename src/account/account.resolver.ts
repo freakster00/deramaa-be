@@ -26,9 +26,9 @@ export class AccountResolver {
   create(@Args('createAccountInput') createAccountInput: CreateAccountInput) {
     return this.accountService.create(createAccountInput);
   }
-
+  @UseGuards(AuthGuard)
   @Mutation('removeaccount')
-  removeacaount(@Args('id') id: number) {
+  removeaccount(@Args('id') id: number) {
     return this.accountService.removeaccount(id);
   }
 
