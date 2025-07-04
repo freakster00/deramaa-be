@@ -21,9 +21,23 @@ type regenerateAccessTokenResponse {
   accessToken:String
   refreshToken:String
 }
-
+input loginInput {
+  phone: String!
+  password: String!
+}
+type loginResponse {
+  success: Boolean!
+  message: String!
+  accessToken: String
+  refreshToken: String
+}
 
 type Mutation {
   authenticate(authenticateInput: authenticateInput!): authenticateResponse!
-  regenerateAccessToken(regenerateAccessTokenInput:regenerateAccessTokenInput!):regenerateAccessTokenResponse!
+  regenerateAccessToken(
+    regenerateAccessTokenInput: regenerateAccessTokenInput!
+  ): regenerateAccessTokenResponse!
+  login(loginInput: loginInput!): loginResponse!
+  forgotPassword(email: String!): Boolean!
+  resetPassword(token: String!, newpassword: String!): Boolean!
 }
