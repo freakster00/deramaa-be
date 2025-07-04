@@ -22,64 +22,54 @@ export class AccountService {
     private readonly authService: AuthService
   ){}
   async create(createAccountInput: CreateAccountInput) {
-    const verifyOtpInput={
-      phone:createAccountInput.phone,
-      otp:createAccountInput.otp
-    }
-    const otpStatus=await this.verifyOtp(verifyOtpInput)
-    if(otpStatus){
-      try{
-        if(createAccountInput.password.length>=8){
-          const db_resp=await this.accountRepository.save({
+    const verifyOtpInput = {
+      phone: createAccountInput.phone,
+      otp: createAccountInput.otp
+    };
+    const otpStatus = await this.verifyOtp(verifyOtpInput);
+    if (otpStatus) {
+      try {
+        if (createAccountInput.password.length >= 8) {
           const db_resp = await this.accountRepository.save({
-            email:createAccountInput.email,
-            firstname:createAccountInput.firstname,
-            lastname:createAccountInput.lastname,
-            password:await this.authService.encrypt(createAccountInput.password),
-            phone:verifyOtpInput.phone
-            
-          })
-          const response={
-            success:true,
-            message:"Account created successfully",
-            account:db_resp
-          }
-          await this.mobileOtpRepository.update({phoneNumber:verifyOtpInput.phone},{revoked:true})
-          return response
-        }
-        else{
+            email: createAccountInput.email,
+            firstname: createAccountInput.firstname,
+            lastname: createAccountInput.lastname,
+            password: await this.authService.encrypt(createAccountInput.password),
+            phone: verifyOtpInput.phone
+          });
+          const response = {
+            success: true,
+            message: "Account created successfully",
+            account: db_resp
+          };
+          await this.mobileOtpRepository.update({ phoneNumber: verifyOtpInput.phone }, { revoked: true });
+          return response;
+        } else {
           return {
-            success:false,
-            message:"Password must be greater than 7 characters.",
-            account:null
-          }
+            success: false,
+            message: "Password must be greater than 7 characters.",
+            account: null
+          };
         }
-        
+      } catch (error) {
+        const error_detail = error.detail;
+        const response = {
+          success: false,
+          message: error_detail,
+          details: null
+        };
+        return response;
       }
-      catch(error){
-        const error_detail=error.detail
-        const response={
-          success:false,
-          message:error_detail,
-          details:null
-        }
-        return response
-      }
-      
-    }
-    else{
+    } else {
       return {
-        success:false,
-      message:"OTP verification error",
-      details:null
+        success: false,
+        message: "OTP verification error",
+        details: null
+      };
     }
-    }
-    
-    
   }
   
-  async sendOtp(sendOtpInput): Promise<{ success: boolean; message: string }> {
-    
+  async sendOtp(sendOtpInput): Promise<{success: boolean; message: string}> {
     try {
       
       const existingAccount = await this.accountRepository.findOne({ 
